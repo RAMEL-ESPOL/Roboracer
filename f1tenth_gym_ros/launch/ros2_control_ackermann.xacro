@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <ros2_control name="GazeboSystem" type="system">
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+    
+    <!-- Ruedas traseras - solo lectura de estado -->
+    <joint name="base_to_back_left_wheel">
+      <state_interface name="velocity"/>
+      <state_interface name="position"/>
+    </joint>
+    
+    <joint name="base_to_back_right_wheel">
+      <state_interface name="velocity"/>
+      <state_interface name="position"/>
+    </joint>
+    
+    <!-- Ruedas delanteras - control de velocidad -->
+    <joint name="front_left_hinge_to_wheel">
+      <command_interface name="velocity">
+        <param name="min">-10</param>
+        <param name="max">10</param>
+      </command_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="position"/>
+    </joint>
+    
+    <joint name="front_right_hinge_to_wheel">
+      <command_interface name="velocity">
+        <param name="min">-10</param>
+        <param name="max">10</param>
+      </command_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="position"/>
+    </joint>
+    
+    <!-- Articulaciones de dirección - control de posición angular -->
+    <joint name="base_to_front_left_hinge">
+      <command_interface name="position">
+        <param name="min">-0.7854</param> <!-- -45 grados -->
+        <param name="max">0.7854</param>  <!-- +45 grados -->
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    
+    <joint name="base_to_front_right_hinge">
+      <command_interface name="position">
+        <param name="min">-0.7854</param>
+        <param name="max">0.7854</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    
+  </ros2_control>
+
+  <gazebo>
+    <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+      <parameters>$(find f1tenth_gym_ros)/config/ackermann_controllers.yaml</parameters>
+      <robot_param>ego_robot_description</robot_param>
+      <robot_param_node>ego_robot_state_publisher</robot_param_node>
+    </plugin>
+  </gazebo>
+
+</robot>
